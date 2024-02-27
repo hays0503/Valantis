@@ -38,12 +38,12 @@ function App() {
 
     
     try {
-      GetData('http://api.valantis.store:40000/');
+      GetData('https://api.valantis.store:41000/');
     }
     catch(e){
       console.log(e);
       console.log("Попытка повторного запроса");
-      GetData('https://api.valantis.store:41000/');  
+      GetData('http://api.valantis.store:40000/');  
     }
 
     
