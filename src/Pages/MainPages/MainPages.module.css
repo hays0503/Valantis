@@ -1,0 +1,32 @@
+
+.main-pages__container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 50px;
+
+}
+
+.main-pages__button{
+    margin-top: 20px;
+    width: 200px;
+    height: 50px;
+    background-color: #f5f5f5;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: 600;
+    color: #000;
+    transition: 0.3s;
+}
+
+
+.main-pages__list-cart{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 50px;
+}
