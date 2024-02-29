@@ -1,15 +1,9 @@
 import { Suspense, useEffect, useState, lazy } from "react";
-import CardList from "@components/CardList/CardList1";
+// import CardList from "@components/CardList/CardList1";
 import Loading from "@components/Loading/Loading";
 import "./MainPages.module.css";
 
-// function delayForDemo(promise) {
-//   return new Promise((resolve) => {
-//     setTimeout(resolve, 2000);
-//   }).then(() => promise);
-// }
-
-// const CardList = lazy(() => import("@components/CardList/CardList"));
+const CardList = lazy(() => import("@components/CardList/CardList"));
 
 export default function MainPages() {
 

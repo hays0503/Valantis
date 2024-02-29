@@ -1,21 +1,25 @@
-import { use, useEffect, useState,memo } from "react";
+import { useCallback, useEffect, useState, memo } from "react";
 import FetchData from "@utils/FetchData";
 import UnicalValue from "@utils/UnicalValue";
 
-
-export default function CardList ({pages}){
-
+export default function CardList({ pages }) {
   const [data, setData] = useState([]);
 
-  const ListItem = memo(({ item }) => <li>{item}</li>);
+  const ListItem = memo(({ items }) => (
+    <ul>
+      {items.map((item) => (
+        <li key={item}>{item}</li>
+      ))}
+    </ul>
+  ));
 
-  const GetData = async (url,_pages) => {
+  const FetchPage = async (url) => {
     try {
-      console.log(`GetData pages: ${_pages}`);
+      console.log(`GetData pages: ${pages}`);
 
       const res = await FetchData(url, {
         action: "get_ids",
-        params: { offset: _pages*50, limit: 50 },
+        params: { offset: pages * 50, limit: 50 },
       });
 
       console.log(res);
@@ -23,31 +27,25 @@ export default function CardList ({pages}){
       //Получение уникальных значений из массива
       const Ids = UnicalValue(res.result);
 
-      setData(Ids);
-
+      return Ids;
     } catch (e) {
       console.log(e);
       console.log("Попытка повторного запроса");
-      GetData('http://api.valantis.store:40000/',_pages);
+      return FetchPage("http://api.valantis.store:40000/", pages);
     }
   };
 
-  //Загрузка данных при первом рендере
-  useEffect(() => {
-    GetData('https://api.valantis.store:41000/',pages);
+  const GetData = useCallback(() => {
+    FetchPage("https://api.valantis.store:41000/").then((value)=>{
+      console.log("+value+ = ", value);
+      setData(value);
+    });
   }, [pages]);
 
+  //Загрузка данных при первом рендере
+  useEffect(() => {
+    GetData();
+  },[GetData]);
 
-  return (
-      <div>
-        {data.length > 0 && (
-          <ul>
-            {data.map((item) => (
-              <ListItem key={item} item={item} />
-            ))}
-          </ul>
-        )}
-      </div>
-  );
-};
-
+  return <div>{data.length > 0 && <ListItem items={data} />}</div>;
+}
