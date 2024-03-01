@@ -1,7 +1,7 @@
 
 const Loading = () => {
     console.log("Loading....");
-    return <div>Загрузка...</div>
+    return <div>Loading...</div>
 };
 
 export default Loading;

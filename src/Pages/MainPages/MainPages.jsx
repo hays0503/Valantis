@@ -1,7 +1,7 @@
 import { Suspense, useEffect, useState, lazy } from "react";
 // import CardList from "@components/CardList/CardList1";
 import Loading from "@components/Loading/Loading";
-import "./MainPages.module.css";
+import style from "./MainPages.module.css";
 
 const CardList = lazy(() => import("@components/CardList/CardList"));
 
@@ -11,14 +11,14 @@ export default function MainPages() {
 
   return (
     <>
-      <div className="main-pages__container">
-        <div className="main-pages__button">
-          <button onClick={() => setPages(pages - 1)}>Prev</button>
+      <div className={style.mainPagesContainer}>
+        <div className={style.mainPagesButton}>
+          <button className={style.Buttom} onClick={() => setPages(pages - 1)}>Prev</button>
           <span>{pages}</span>
-          <button onClick={() => setPages(pages + 1)}>Next</button>
+          <button className={style.Buttom} onClick={() => setPages(pages + 1)}>Next</button>
         </div>
         <Suspense fallback={<Loading />}>
-          <CardList className=".main-pages__list-cart" pages={pages} />
+          <CardList className={style.mainPagesListCart} pages={pages} />
         </Suspense>
       </div>
     </>

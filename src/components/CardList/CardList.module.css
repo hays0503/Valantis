@@ -1,0 +1,26 @@
+
+.cardContainer{
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    align-items: stretch;
+    margin-top: 20px;
+    justify-items: stretch;
+
+}
+
+.Card{
+    /* min-height: 226; */
+    display: flex;
+    align-items: center;
+    background: rgb(61, 61, 61);
+    border-radius: 5%;
+    margin: 5px;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: space-between;
+}

@@ -4,16 +4,19 @@ import md5 from 'md5';
 
 async function FetchData(url, param) {
     const currentDate = new Date();
-    const month = currentDate.getUTCMonth() + 1;
-    const md5Data = `Valantis_${currentDate.getUTCFullYear()}${month>9 ? month : '0'+month.toString()}${currentDate.getUTCDate()}`;
-    console.log(md5Data);
+    const addZero = (num) => num > 9 ? num : '0'+num.toString();
+    const dayString = addZero(currentDate.getUTCDate());
+    const mountString = addZero(currentDate.getUTCMonth()+ 1)
+    const md5Data = `Valantis_${currentDate.getUTCFullYear()}${mountString}${dayString}`;
+    const hash = md5(md5Data);
+    console.log(hash);
 
     try {
         const response = await fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-Auth': md5(md5Data)
+                'X-Auth': hash
             },
             body: JSON.stringify(param),
         });
