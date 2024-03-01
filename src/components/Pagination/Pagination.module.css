@@ -1,0 +1,21 @@
+.mainPagesButton{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: space-around;
+    align-items: center;
+
+    border: none;
+    border-radius: 5px;
+
+
+    font-size: 20px;
+    font-weight: 600;
+    color: #ffffff;
+
+}
+
+.Buttom{
+    margin: 5px;
+}

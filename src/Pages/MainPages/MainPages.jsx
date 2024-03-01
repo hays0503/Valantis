@@ -1,5 +1,6 @@
 import { Suspense, useEffect, useState, lazy } from "react";
-// import CardList from "@components/CardList/CardList1";
+import Pagination from "@components/Pagination/Pagination";
+import Filter from "@components/Filter/Filter";
 import Loading from "@components/Loading/Loading";
 import style from "./MainPages.module.css";
 
@@ -11,12 +12,10 @@ export default function MainPages() {
 
   return (
     <>
-      <div className={style.mainPagesContainer}>
-        <div className={style.mainPagesButton}>
-          <button className={style.Buttom} onClick={() => setPages(pages - 1)}>Prev</button>
-          <span>{pages}</span>
-          <button className={style.Buttom} onClick={() => setPages(pages + 1)}>Next</button>
-        </div>
+      
+      <div className={style.mainPagesContainer}>        
+        <Filter />
+        <Pagination pages={pages} setPages={setPages}/>
         <Suspense fallback={<Loading />}>
           <CardList className={style.mainPagesListCart} pages={pages} />
         </Suspense>

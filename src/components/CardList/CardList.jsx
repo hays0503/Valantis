@@ -1,23 +1,24 @@
 import { useEffect, useState, memo } from "react";
 import FetchData from "@utils/FetchData";
-import UnicalValue from "@utils/UnicalValue";
+import {UnicalValue,UnicalValueMap} from "@utils/UnicalValue";
 import style from "./CardList.module.css";
 
 
 export default function CardList({ pages }) {
   const [data, setData] = useState([]);
 
-  const ListItem = memo(({ items }) => (
+  const ListItem = ({ items }) => (
     <div className={style.cardContainer}>
-      {items.map((item) => (
-        <div key={item} className={style.Card}>
-          <h5>{item.product}</h5>
-          {item.brand && <h6>Бренд {item.brand}</h6>}
-          <span>{item.price}</span>
+      {/* {items.map((item) => (
+        <div key={item.id} className={style.Card}>
+          <span>Id: {item.id}</span>
+          <span>Название: {item.product}</span>
+          <span>Бренд: {item.brand ? item.brand : "Отсутствует"}</span>
+          <span>Цена: {item.price} Рублей</span>
         </div>
-      ))}
+      ))} */}
     </div>
-  ));
+  );
 
   const FetchPage = async (url, _pages) => {
     try {
@@ -30,8 +31,6 @@ export default function CardList({ pages }) {
       //Получение уникальных значений из массива
       const Ids = UnicalValue(resIds.result);
 
-      // console.log("Ids: ", Ids);
-
       const res = await FetchData(url, {
         action: "get_items",
         params: {
@@ -39,15 +38,16 @@ export default function CardList({ pages }) {
         }
       });
 
-      // console.log("res: ", res);
-
-      const items = UnicalValue(res.result);
+      const items = UnicalValueMap(res.result);
 
       return items;
+
     } catch (e) {
+
       console.log(e);
       console.log("Попытка повторного запроса");
       return FetchPage("http://api.valantis.store:40000/", _pages);
+
     }
   };
 
@@ -67,7 +67,7 @@ export default function CardList({ pages }) {
   const MainComponent = () => <ListItem items={data} />;
 
   const ComponentIsPending = () =>
-    data.length > 0 ? <MainComponent /> : "Загрузка...";
+    data.length > 0 ? <MainComponent /> : <h3>Загрузка...</h3>;
 
   return <ComponentIsPending />;
 }
