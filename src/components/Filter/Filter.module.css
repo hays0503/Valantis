@@ -2,6 +2,17 @@
 .FilterContainer {
     display: flex;
     justify-content: space-between;
+    align-items: flex-start;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    width: 100%;
+    background: #414141;
+    border-radius: 1%;
+}
+
+.FilterHeader {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -38,4 +49,13 @@
     width: 30px;
     height: 30px;
     padding: 5px;
+}
+
+.FilterSearch:hover{
+    background: #646cff;
+    border-radius: 50%;
+}
+
+.FilterCustom{
+    width: 100%;
 }
