@@ -1,10 +1,13 @@
 import React from 'react';
+import style from "./Pagination.module.css";
 
-const Pagination = () => {
+const Pagination = ({pages,setPages}) => {
   return (
-    <div>
-      {/* Pagination content goes here */}
-    </div>
+    <div className={style.mainPagesButton}>
+      <button className={style.Buttom} onClick={() => setPages(pages - 1)}>Назад</button>
+      <span> {`Страница: ${pages}`}</span>
+      <button className={style.Buttom} onClick={() => setPages(pages + 1)}>Вперед</button>
+  </div>
   );
 };
 

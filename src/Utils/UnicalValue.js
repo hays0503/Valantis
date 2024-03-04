@@ -4,4 +4,13 @@ const UnicalValue = (value) => {
     return Unical;
 }
 
-export default UnicalValue;
+const UnicalValueMap = (value) => {
+    const Maps = new Map();
+    value.forEach((item) => {
+        Maps.set(item.id, item);
+    });
+    const Unical = [...Maps.values()];
+    return Unical;
+}
+
+export {UnicalValue, UnicalValueMap};
