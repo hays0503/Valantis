@@ -1,7 +1,20 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
+import useGetFields from "@hook/useGetFields";
 import style from './DoubleRange.module.css';
 
 const DoubleRange = ({ min, max, onChange }) => {
+
+    const getRange = async (url) => {
+        try{
+            const price = await useGetFields(url,"price");
+            const min = Math.min(...price);
+            const max = Math.max(...price);
+            return {min,max};
+        }catch(e){
+            getRange("http://api.valantis.store:40000/");
+        }
+
+    }
 
     const RangeVisual = useRef(null);
 
@@ -36,18 +49,9 @@ const DoubleRange = ({ min, max, onChange }) => {
 
             RangeVisual.current.style.left = left;
 
-            // _0MinRange = left;
-            // _1MinRange = left;
-            // MaxRange.current.style.left = left;
-            // MinRange.current.style.left = left;
-
             const right = 100 - (maxRange / MaxRange.current.max) * 100 + "%";
 
             RangeVisual.current.style.right = right;
-            // _0MaxRange = right;
-            // _1MaxRange = right;
-            // MaxRange.current.style.right = right;
-            // MinRange.current.style.right = right;
         }
     };
 
@@ -58,31 +62,27 @@ const DoubleRange = ({ min, max, onChange }) => {
             if (e.target.className === "min") {
                 MinRange.current.value = minPrice;
                 const left = (minPrice / MinRange.current.max) * 100 + "%";
-
                 RangeVisual.current.style.left = left;
 
-                // _0MinRange = left;
-                // _1MinRange = left;
-                // MaxRange.current.style.left = left;
-                // MinRange.current.style.left = left;
             } else {
                 MaxRange.current.value = maxPrice;
                 const right = 100 - (maxPrice / MaxRange.current.max) * 100 + "%";
-
                 RangeVisual.current.style.right = right;
-
-                // _0MaxRange = right;
-                // _1MaxRange = right;
-                // MaxRange.current.style.right = right;
-                // MinRange.current.style.right = right;
             }
         }
     }
 
+    useEffect(() => {
+        getRange("https://api.valantis.store:41000/").then((value) => {
+            MaxRange.current.max = value.max;
+            MinRange.current.max = value.max;
+        });
+    },[]);
+
 
     return (
         <div className={style.doubleRangeContainer}>
-            <div className={style.range}>
+            {/* <div className={style.range}> */}
                 <div className={style.rangeSlider}>
                     <span ref={RangeVisual} className={style.rangeSelected}></span>
                 </div>
@@ -93,10 +93,11 @@ const DoubleRange = ({ min, max, onChange }) => {
                         className={style.min}
                         ref={MinRange}
                         onChange={ActonRange}
+                        onMouseMove={ActonRange}
                         min={_0MinRange.current}
                         max={_0MaxRange.current}
                         defaultValue="300"
-                        step="10"
+                        step="1"
                     />
 
                     <input
@@ -104,23 +105,24 @@ const DoubleRange = ({ min, max, onChange }) => {
                         className={style.max}
                         ref={MaxRange}
                         onChange={ActonRange}
+                        onMouseMove={ActonRange}
                         min={_1MinRange.current}
                         max={_1MaxRange.current}
                         defaultValue="700"
-                        step="10"
+                        step="1"
                     />
                 </div>
                 <div className={style.rangePrice}>
-                    <label htmlFor="min">Min</label>
+                    <label htmlFor="min">От</label>
                     <input ref={MinValue} onChange={ActonPrice} type="number" name="min"
                         defaultValue="300"
                     />
-                    <label htmlFor="max">Max</label>
+                    <label htmlFor="max">До</label>
                     <input ref={MaxValue} onChange={ActonPrice} type="number" name="max"
                         defaultValue="700"
                     />
                 </div>
-            </div>
+            {/* </div> */}
         </div>
     );
 }

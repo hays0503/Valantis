@@ -1,0 +1,15 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.checkBoxFilterExpander{    
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    background-color: #313131;
+    width: 100%;
+    padding: 5px;
+}
+

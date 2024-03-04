@@ -8,11 +8,11 @@
     align-items: stretch;
     margin-top: 20px;
     justify-items: stretch;
-
 }
 
 .Card{
     /* min-height: 226; */
+    
     display: flex;
     align-items: center;
     background: rgb(61, 61, 61);
@@ -23,4 +23,5 @@
     flex-wrap: nowrap;
     align-content: center;
     justify-content: space-between;
+    
 }

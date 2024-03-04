@@ -1,11 +1,11 @@
-.filter{
+.expander{
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;    
 }
 
-.filterHeader{
+.expanderHeader{
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -14,17 +14,11 @@
     width: 100%;
 }
 
-.filter  img{
+.expander  img{
     width: 32px;
     height: 32px;    
     border-radius: 10%;
     padding: 5px;
 }
 
-.filterContainer{
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    background-color: #313131;
-    width: 100%;
-    padding: 5px;
-}
+

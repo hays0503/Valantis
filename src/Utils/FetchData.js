@@ -1,17 +1,11 @@
-import md5 from 'md5';
-
+import GenerateAuth from './Auth';
 
 
 async function FetchData(url, param) {
-    const currentDate = new Date();
-    const addZero = (num) => num > 9 ? num : '0'+num.toString();
-    const dayString = addZero(currentDate.getUTCDate());
-    const mountString = addZero(currentDate.getUTCMonth()+ 1)
-    const md5Data = `Valantis_${currentDate.getUTCFullYear()}${mountString}${dayString}`;
-    const hash = md5(md5Data);
+    const hash = GenerateAuth();
     console.log(hash);
 
-    try {
+     try {
         const response = await fetch(url, {
             method: 'POST',
             headers: {
@@ -22,10 +16,11 @@ async function FetchData(url, param) {
         });
         const data = await response.json();
         return data;
-    } catch (error) {
-        console.log('Error in fetch:', error);
-        throw error;
-    }
+     } catch (error) {
+    //     console.log('Error in fetch:', error);
+         throw error;
+     }
 }
 
 export default FetchData;
+
