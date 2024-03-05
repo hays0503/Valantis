@@ -1,5 +1,5 @@
 import React, { useEffect, useState,useContext } from "react";
-import {ContextApp} from "@pages/MainPages/reducer";
+import { ContextApp } from "@pages/MainPages/reducer";
 import style from "./CheckBoxFilter.module.css";
 import useGetFields from "@hook/useGetFields";
 

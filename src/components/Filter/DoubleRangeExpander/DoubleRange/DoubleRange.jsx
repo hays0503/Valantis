@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useContext } from "react";
+import { ContextApp } from "@pages/MainPages/reducer";
 import useGetFields from "@hook/useGetFields";
 import style from "./DoubleRange.module.css";
 
