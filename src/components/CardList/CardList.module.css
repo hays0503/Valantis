@@ -10,6 +10,14 @@
     justify-items: stretch;
 }
 
+/* Медиа запрос если экран мобильный делаем в 1 колонку */
+@media (max-width: 768px){
+    .cardContainer{
+        grid-template-columns: 1fr;
+    }
+}
+
+
 .Card{
     /* min-height: 226; */
     

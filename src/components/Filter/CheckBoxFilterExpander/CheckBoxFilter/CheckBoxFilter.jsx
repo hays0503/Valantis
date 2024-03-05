@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useContext } from "react";
+import {ContextApp} from "@pages/MainPages/reducer";
 import style from "./CheckBoxFilter.module.css";
 import useGetFields from "@hook/useGetFields";
 
@@ -6,9 +7,24 @@ const CheckBoxFilter = ({ Header }) => {
     
     const [providers, setProviders] = useState([]);
 
+    const {state, dispatch} = useContext(ContextApp);
+
     const toggleProvider = (event, provider) => {
         console.log("event = ",event);
         console.log("provider = ",provider);
+        console.log("state.app ",state.app);
+        dispatch({
+            type: 'test_update',
+            payload: {
+                app: {
+                    ...state.app,
+                    providers: event.target.checked ? 
+                    [...state.app.providers, provider] :
+                    state.app.providers.filter((item) => item !== provider)
+                
+                }
+            }
+        });
     };
 
     const GetProviders = async (url) => {

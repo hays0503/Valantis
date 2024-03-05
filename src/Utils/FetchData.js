@@ -3,7 +3,7 @@ import GenerateAuth from './Auth';
 
 async function FetchData(url, param) {
     const hash = GenerateAuth();
-    console.log(hash);
+    // console.log(hash);
 
      try {
         const response = await fetch(url, {
@@ -17,7 +17,6 @@ async function FetchData(url, param) {
         const data = await response.json();
         return data;
      } catch (error) {
-    //     console.log('Error in fetch:', error);
          throw error;
      }
 }

@@ -1,11 +1,13 @@
-import { useEffect, useState, memo } from "react";
+import { useEffect, useState, memo,useContext } from "react";
 import useGetIds from "@hook/useGetIds";
 import useGetItemsById from "@hook/useGetItemsById";
 import style from "./CardList.module.css";
 
+import { ContextApp } from "@pages/MainPages/reducer";
 
 export default function CardList({ pages }) {
   const [data, setData] = useState([]);
+  const { state, dispatch } = useContext(ContextApp);
 
   const ListItem = ({ items }) => (
     <div className={style.cardContainer}>
@@ -22,30 +24,25 @@ export default function CardList({ pages }) {
 
   const FetchPage = async (url, _pages) => {
     try {
-      
-      const Ids = await useGetIds(url,_pages);
+      const Ids = await useGetIds(url, _pages);
 
       // console.log("Ids", Ids)
 
-      const items = await useGetItemsById(url,Ids);
+      const items = await useGetItemsById(url, Ids);
 
       // console.log("items", items)
 
       return items;
-
     } catch (e) {
       console.log("Случилась ошибка запроса:", e.message);
       console.log("Попытка повторного запроса");
       return FetchPage("http://api.valantis.store:40000/", _pages);
-
     }
   };
 
   const GetData = () => {
     setData([]);
-    FetchPage("https://api.valantis.store:41000/", pages)
-    .then((value) => {
-      // console.log("+value+ = ", value);
+    FetchPage("https://api.valantis.store:41000/", pages).then((value) => {
       setData(value);
     });
   };
@@ -55,7 +52,12 @@ export default function CardList({ pages }) {
     GetData();
   }, [pages]);
 
-  const MainComponent = () => <ListItem items={data} />;
+  const MainComponent = () => (
+    <div>
+      {JSON.stringify(state)}
+      <ListItem items={data} />
+    </div>
+  );
 
   const ComponentIsPending = () =>
     data.length > 0 ? <MainComponent /> : <h3>Загрузка...</h3>;

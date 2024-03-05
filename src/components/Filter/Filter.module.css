@@ -1,11 +1,10 @@
-
 .FilterContainer {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     flex-direction: column;
     flex-wrap: nowrap;
-    width: 100%;
+    width: 98vw;
     background: #414141;
     border-radius: 1%;
 }

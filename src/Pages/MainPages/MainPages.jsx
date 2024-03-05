@@ -1,4 +1,5 @@
-import { Suspense, useEffect, useState, lazy } from "react";
+import { Suspense, useReducer, useState, lazy } from "react";
+import {ContextApp, initialState, testReducer} from "./reducer";
 import Pagination from "@components/Pagination/Pagination";
 import Filter from "@components/Filter/Filter";
 import Loading from "@components/Loading/Loading";
@@ -10,8 +11,11 @@ export default function MainPages() {
 
   const [pages, setPages] = useState(0);
 
+  // Инициализируем reducer и получаем state + dispatch для записи
+  const [state, dispatch] = useReducer(testReducer, initialState);
+
   return (
-    <>
+    <ContextApp.Provider value={{dispatch, state}}>
       
       <div className={style.mainPagesContainer}>        
         <Filter />
@@ -20,7 +24,7 @@ export default function MainPages() {
           <CardList className={style.mainPagesListCart} pages={pages} />
         </Suspense>
       </div>
-    </>
+    </ContextApp.Provider>
   );
 };
 

@@ -1,131 +1,154 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from "react";
 import useGetFields from "@hook/useGetFields";
-import style from './DoubleRange.module.css';
+import style from "./DoubleRange.module.css";
 
-const DoubleRange = ({ min, max, onChange }) => {
+const DoubleRange = () => {
+  const RangeVisual = useRef(null);
 
-    const getRange = async (url) => {
-        try{
-            const price = await useGetFields(url,"price");
-            const min = Math.min(...price);
-            const max = Math.max(...price);
-            return {min,max};
-        }catch(e){
-            getRange("http://api.valantis.store:40000/");
-        }
+  const MaxRange = useRef(null);
+  const MinRange = useRef(null);
 
+  const MaxValue = useRef(null);
+  const MinValue = useRef(null);
+
+  const [rangeObj, setObjRange] = useState({ min: 0, max: 0 });
+  const [message, setMessage] = useState("");
+
+  const {state, dispatch} = useContext(ContextApp);
+
+  let rangeMin = 100;
+
+  const setStyle = (minRange, maxRange) => {
+    const left = (minRange / MinRange.current.max) * 100 + "%";
+
+    RangeVisual.current.style.left = left;
+
+    const right = 100 - (maxRange / MaxRange.current.max) * 100 + "%";
+
+    RangeVisual.current.style.right = right;
+  };
+
+  const setRange = (minRange, maxRange) => {
+    MinRange.current.min = minRange;
+    MinRange.current.max = maxRange;
+    MinRange.current.value = minRange;
+
+    MaxRange.current.max = maxRange;
+    MaxRange.current.min = minRange;
+    MaxRange.current.value = maxRange;
+
+    MinValue.current.value = minRange;
+    MaxValue.current.value = maxRange;
+  };
+
+  const getRange = async (url) => {
+    try {
+      const price = await useGetFields(url, "price");
+
+      const _min = Math.min(...price);
+      const _max = Math.max(...price);
+
+      setRange(_min, _max);
+      setStyle(_min, _max);
+      setObjRange({ min: _min, max: _max });
+    } catch (e) {
+      getRange("http://api.valantis.store:40000/");
+    }
+  };
+
+  const ActonRange = (e) => {
+    let minRange = parseInt(MinRange.current.value);
+    let maxRange = parseInt(MaxRange.current.value);
+    console.log("minRange, maxRange", minRange, maxRange);
+    if (maxRange - minRange < rangeMin) {
+      if (e.target.name === "min") {
+        MinRange.current.value = maxRange - rangeMin;
+      } else {
+        MaxRange.current.value = minRange + rangeMin;
+      }
+    } else {
+      MinValue.current.value = minRange;
+      MaxValue.current.value = maxRange;
     }
 
-    const RangeVisual = useRef(null);
+    setStyle(minRange, maxRange);
+  };
 
-    const MaxRange = useRef(null);
-    const MinRange = useRef(null);
+  const ActonPrice = (e) => {
+    let minPrice = MinValue.current.value;
+    let maxPrice = MaxValue.current.value;
 
-    const _0MaxRange = useRef(1000);
-    const _0MinRange = useRef(0);
+      // console.log("_______________________");
+      // console.log(e.target.value);
+      // console.log("maxPrice > minPrice", maxPrice > minPrice);
+      // console.log("maxPrice", maxPrice, "minPrice", minPrice);
 
+    if (maxPrice <= minPrice && minPrice >= maxPrice) {
+      setMessage("Не допустимый диапазон цен");
 
-    const _1MaxRange = useRef(1000);
-    const _1MinRange = useRef(0);
-
-    const MaxValue = useRef(null);
-    const MinValue = useRef(null);
-
-    let rangeMin = 100;
-
-    const ActonRange = (e) => {
-        let minRange = parseInt(MinRange.current.value);
-        let maxRange = parseInt(MaxRange.current.value);
-        if (maxRange - minRange < rangeMin) {
-            if (e.target.className === "min") {
-                MinRange.current.value = maxRange - rangeMin;
-            } else {
-                MaxRange.current.value = minRange + rangeMin;
-            }
-        } else {
-            MinValue.current.value = minRange;
-            MaxValue.current.value = maxRange;
-            const left = (minRange / MinRange.current.max) * 100 + "%";
-
-            RangeVisual.current.style.left = left;
-
-            const right = 100 - (maxRange / MaxRange.current.max) * 100 + "%";
-
-            RangeVisual.current.style.right = right;
-        }
-    };
-
-    const ActonPrice = (e) => {
-        let minPrice = MinValue.current.value;
-        let maxPrice = MaxValue.current.value;
-        if (maxPrice - minPrice >= rangeMin && maxPrice <= MaxRange.current.max) {
-            if (e.target.className === "min") {
-                MinRange.current.value = minPrice;
-                const left = (minPrice / MinRange.current.max) * 100 + "%";
-                RangeVisual.current.style.left = left;
-
-            } else {
-                MaxRange.current.value = maxPrice;
-                const right = 100 - (maxPrice / MaxRange.current.max) * 100 + "%";
-                RangeVisual.current.style.right = right;
-            }
-        }
+    }else{
+      setMessage("");
     }
+      MaxRange.current.value = maxPrice;
+      MinRange.current.value = minPrice;
+      setStyle(minPrice, maxPrice);
+    
+  };
 
-    useEffect(() => {
-        getRange("https://api.valantis.store:41000/").then((value) => {
-            MaxRange.current.max = value.max;
-            MinRange.current.max = value.max;
-        });
-    },[]);
+  useEffect(() => {
+    getRange("https://api.valantis.store:41000/");
+  }, []);
 
-
-    return (
+  return (
+    <div className={style.wrapper}>
+      {MaxRange && MinRange && (
         <div className={style.doubleRangeContainer}>
-            {/* <div className={style.range}> */}
-                <div className={style.rangeSlider}>
-                    <span ref={RangeVisual} className={style.rangeSelected}></span>
-                </div>
-                <div className={style.rangeInput}>
+          <div className={style.rangeSlider}>
+            <span ref={RangeVisual} className={style.rangeSelected}></span>
+          </div>
+          <div className={style.rangeInput}>
+            <input
+              type="range"
+              name="min"
+              ref={MinRange}
+              onChange={ActonRange}
+              onMouseMove={ActonRange}
+              step="1"
+            />
 
-                    <input
-                        type="range"
-                        className={style.min}
-                        ref={MinRange}
-                        onChange={ActonRange}
-                        onMouseMove={ActonRange}
-                        min={_0MinRange.current}
-                        max={_0MaxRange.current}
-                        defaultValue="300"
-                        step="1"
-                    />
-
-                    <input
-                        type="range"
-                        className={style.max}
-                        ref={MaxRange}
-                        onChange={ActonRange}
-                        onMouseMove={ActonRange}
-                        min={_1MinRange.current}
-                        max={_1MaxRange.current}
-                        defaultValue="700"
-                        step="1"
-                    />
-                </div>
-                <div className={style.rangePrice}>
-                    <label htmlFor="min">От</label>
-                    <input ref={MinValue} onChange={ActonPrice} type="number" name="min"
-                        defaultValue="300"
-                    />
-                    <label htmlFor="max">До</label>
-                    <input ref={MaxValue} onChange={ActonPrice} type="number" name="max"
-                        defaultValue="700"
-                    />
-                </div>
-            {/* </div> */}
+            <input
+              type="range"
+              name="max"
+              ref={MaxRange}
+              onChange={ActonRange}
+              onMouseMove={ActonRange}
+              step="1"
+            />
+          </div>
+          <div className={style.rangePrice}>
+            <label htmlFor="min">От</label>
+            <input
+              ref={MinValue}
+              onChange={ActonPrice}
+              placeholder={rangeObj.min}
+              type="number"
+              name="min"
+            />
+            <label htmlFor="max">До</label>
+            <input
+              ref={MaxValue}
+              onChange={ActonPrice}
+              placeholder={rangeObj.max}
+              type="number"
+              name="max"
+            />
+          </div>
         </div>
-    );
-}
+        
+      )}
+      {message}
+    </div>
+  );
+};
 
 export default DoubleRange;
-
