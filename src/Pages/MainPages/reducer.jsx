@@ -3,9 +3,9 @@ export const ContextApp = React.createContext();
 
 export const initialState = {
     app: {
-        test: 'test_context',
         providers: [],
-        price_range: {max:0,min:900000}
+        price_range:{},
+        search: ""
     },
     
 };

@@ -1,7 +1,8 @@
 const UnicalValue = (value) => {
     const Sets = new Set([...value]);
     const Unical = [...Sets.values()];
-    return Unical;
+    //Убираем пустые значения
+    return Unical.filter((item) => item !== null);
 }
 
 const UnicalValueMap = (value) => {
@@ -10,7 +11,7 @@ const UnicalValueMap = (value) => {
         Maps.set(item.id, item);
     });
     const Unical = [...Maps.values()];
-    return Unical;
+    return Unical.filter((item) => item !== null);;
 }
 
 export {UnicalValue, UnicalValueMap};

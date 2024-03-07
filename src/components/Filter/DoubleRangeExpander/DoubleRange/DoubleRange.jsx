@@ -3,6 +3,8 @@ import { ContextApp } from "@pages/MainPages/reducer";
 import useGetFields from "@hook/useGetFields";
 import style from "./DoubleRange.module.css";
 
+const _useGetFields = useGetFields();
+
 const DoubleRange = () => {
   const RangeVisual = useRef(null);
 
@@ -15,7 +17,7 @@ const DoubleRange = () => {
   const [rangeObj, setObjRange] = useState({ min: 0, max: 0 });
   const [message, setMessage] = useState("");
 
-  const {state, dispatch} = useContext(ContextApp);
+  const { state, dispatch } = useContext(ContextApp);
 
   let rangeMin = 100;
 
@@ -44,11 +46,18 @@ const DoubleRange = () => {
 
   const getRange = async (url) => {
     try {
-      const price = await useGetFields(url, "price");
-
+      const price = await _useGetFields(url, "price");
       const _min = Math.min(...price);
       const _max = Math.max(...price);
-
+      dispatch({
+        type: "test_update",
+        payload: {
+          app: {
+            ...state.app,
+            price_range: { defMax: _max, defMin: _min , max:_max,min:_min},
+          },
+        },
+      });
       setRange(_min, _max);
       setStyle(_min, _max);
       setObjRange({ min: _min, max: _max });
@@ -60,7 +69,6 @@ const DoubleRange = () => {
   const ActonRange = (e) => {
     let minRange = parseInt(MinRange.current.value);
     let maxRange = parseInt(MaxRange.current.value);
-    console.log("minRange, maxRange", minRange, maxRange);
     if (maxRange - minRange < rangeMin) {
       if (e.target.name === "min") {
         MinRange.current.value = maxRange - rangeMin;
@@ -70,6 +78,15 @@ const DoubleRange = () => {
     } else {
       MinValue.current.value = minRange;
       MaxValue.current.value = maxRange;
+      dispatch({
+        type: "test_update",
+        payload: {
+          app: {
+            ...state.app,
+            price_range: {...state.app.price_range, max: maxRange, min: minRange },
+          },
+        },
+      });
     }
 
     setStyle(minRange, maxRange);
@@ -79,25 +96,59 @@ const DoubleRange = () => {
     let minPrice = MinValue.current.value;
     let maxPrice = MaxValue.current.value;
 
-      // console.log("_______________________");
-      // console.log(e.target.value);
-      // console.log("maxPrice > minPrice", maxPrice > minPrice);
-      // console.log("maxPrice", maxPrice, "minPrice", minPrice);
+    if (maxPrice - minPrice < rangeMin) {
 
-    if (maxPrice <= minPrice && minPrice >= maxPrice) {
-      setMessage("Не допустимый диапазон цен");
+    } else {
 
-    }else{
-      setMessage("");
-    }
-      MaxRange.current.value = maxPrice;
       MinRange.current.value = minPrice;
+      MaxRange.current.value = maxPrice;
+      dispatch({
+        type: "test_update",
+        payload: {
+          app: {
+            ...state.app,
+            price_range: {...state.app.price_range, max: maxPrice, min: minPrice },
+          },
+        },
+      });
       setStyle(minPrice, maxPrice);
-    
+    }
+  };
+
+  const onBlurInput = (e) => {
+    let minPrice = MinValue.current.value;
+    let maxPrice = MaxValue.current.value;
+
+    if (minPrice < rangeObj.min || minPrice > rangeObj.max) {
+      MinRange.current.value = rangeObj.min;
+      MinValue.current.value = rangeObj.min;
+      dispatch({
+        type: "test_update",
+        payload: {
+          app: {
+            ...state.app,
+            price_range: {...state.app.price_range, max: maxPrice, min: rangeObj.min },
+          },
+        },
+      });
+    }
+    if (maxPrice > rangeObj.max || maxPrice < rangeObj.min) {
+      MaxRange.current.value = rangeObj.max;
+      MaxValue.current.value = rangeObj.max;
+      dispatch({
+        type: "test_update",
+        payload: {
+          app: {
+            ...state.app,
+            price_range: {...state.app.price_range, max: rangeObj.max, min: minPrice },
+          },
+        },
+      });
+    }
   };
 
   useEffect(() => {
-    getRange("https://api.valantis.store:41000/");
+    getRange("https://api.valantis.store:41000/");    
   }, []);
 
   return (
@@ -113,7 +164,7 @@ const DoubleRange = () => {
               name="min"
               ref={MinRange}
               onChange={ActonRange}
-              onMouseMove={ActonRange}
+              // onMouseMove={ActonRange}
               step="1"
             />
 
@@ -122,7 +173,7 @@ const DoubleRange = () => {
               name="max"
               ref={MaxRange}
               onChange={ActonRange}
-              onMouseMove={ActonRange}
+              // onMouseMove={ActonRange}
               step="1"
             />
           </div>
@@ -131,6 +182,7 @@ const DoubleRange = () => {
             <input
               ref={MinValue}
               onChange={ActonPrice}
+              onBlur={onBlurInput}
               placeholder={rangeObj.min}
               type="number"
               name="min"
@@ -139,13 +191,13 @@ const DoubleRange = () => {
             <input
               ref={MaxValue}
               onChange={ActonPrice}
+              onBlur={onBlurInput}
               placeholder={rangeObj.max}
               type="number"
               name="max"
             />
           </div>
         </div>
-        
       )}
       {message}
     </div>

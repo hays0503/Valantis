@@ -3,6 +3,8 @@ import { ContextApp } from "@pages/MainPages/reducer";
 import style from "./CheckBoxFilter.module.css";
 import useGetFields from "@hook/useGetFields";
 
+const _useGetFields = useGetFields();
+
 const CheckBoxFilter = ({ Header }) => {
     
     const [providers, setProviders] = useState([]);
@@ -10,9 +12,7 @@ const CheckBoxFilter = ({ Header }) => {
     const {state, dispatch} = useContext(ContextApp);
 
     const toggleProvider = (event, provider) => {
-        console.log("event = ",event);
-        console.log("provider = ",provider);
-        console.log("state.app ",state.app);
+
         dispatch({
             type: 'test_update',
             payload: {
@@ -29,7 +29,7 @@ const CheckBoxFilter = ({ Header }) => {
 
     const GetProviders = async (url) => {
         try {
-            setProviders(await useGetFields(url,"brand"));
+            setProviders(await _useGetFields(url,"brand"));
 
         } catch (e) {
             console.log("Случилась ошибка запроса:", e.message);
